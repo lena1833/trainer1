@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Clothes Trainer – All Characters</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #e5edff;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 24px 12px;
+    }
+
+    .shell {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+      display: flex;
+      flex-direction: column;
+      max-width: 1120px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .topbar {
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 0.82rem;
+      padding: 8px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .topbar-left {
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #a5b4fc;
+    }
+
+    .topbar-right {
+      font-size: 0.82rem;
+      color: #e5e7eb;
+    }
+
+    .main {
+      display: flex;
+      padding: 18px;
+      gap: 18px;
+    }
+
+    /* ЛЕВАЯ КОЛОНКА (МЕНЮ) */
+    .sidebar {
+      width: 280px;
+      background: #f4f3ff;
+      border-radius: 16px;
+      padding: 14px 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sidebar-title {
+      font-size: 1.02rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .sidebar-subtitle {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+
+    .pronouns-line {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+
+    .characters {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .char-btn {
+      width: 100%;
+      text-align: left;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      padding: 8px 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: box-shadow 0.15s ease, transform 0.1s ease,
+                  background 0.15s ease, border-color 0.15s ease;
+      font-size: 0.82rem;
+    }
+
+    .char-btn:hover {
+      box-shadow: 0 8px 18px rgba(148, 163, 184, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .char-btn.active {
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      border-color: #4f46e5;
+      color: #eef2ff;
+      box-shadow: 0 10px 22px rgba(79, 70, 229, 0.45);
+    }
+
+    .char-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: #eef2ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .char-btn.active .char-icon {
+      background: rgba(15, 23, 42, 0.15);
+    }
+
+    .char-text-main {
+      font-weight: 600;
+      font-size: 0.86rem;
+    }
+
+    .char-text-sub {
+      font-size: 0.7rem;
+      opacity: 0.9;
+    }
+
+    /* Инструкция под меню */
+    .menu-instructions {
+      margin-top: 8px;
+      padding: 10px 10px 8px;
+      border-radius: 12px;
+      background: #eef2ff;
+      border: 1px solid #e0e7ff;
+      font-size: 0.78rem;
+      color: #374151;
+    }
+
+    .menu-instructions-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 0.8rem;
+    }
+
+    .menu-instructions ol {
+      margin: 0;
+      padding-left: 16px;
+    }
+
+    .menu-instructions li {
+      margin-bottom: 2px;
+    }
+
+    /* ПРАВАЯ КОЛОНКА (ПРЕДПРОСМОТР) */
+    .preview {
+      flex: 1;
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 16px 16px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .preview-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #9ca3af;
+      margin-bottom: 8px;
+      align-self: flex-start;
+    }
+
+    .iframe-frame {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: inset 0 0 0 1px #e5e7eb, 0 12px 26px rgba(148, 163, 184, 0.45);
+      padding: 10px 10px 12px;
+      width: 420px;      /* ширина карточки тренажёра */
+    }
+
+    .iframe-inner-header {
+      height: 0.5rem;
+      margin-bottom: 6px;
+      border-radius: 999px;
+      background: #f3f4f6;
+    }
+
+    .iframe-shell {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #e5e7eb;
+      background: #111827;
+    }
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 840px;     /* УВЕЛИЧИЛИ, чтобы было видно Sentence полностью */
+      border: none;
+    }
+
+    @media (max-width: 960px) {
+      .main {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+
+      .preview {
+        align-items: stretch;
+      }
+
+      .iframe-frame {
+        width: 100%;
+        max-width: 420px;
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div class="topbar-left">INTERACTIVE</div>
+      <div class="topbar-right">Интерактивный тренажер для отработки фраз</div>
+    </div>
+
+    <div class="main">
+      <!-- ЛЕВАЯ КОЛОНКА -->
+      <aside class="sidebar">
+        <div class="sidebar-title">Choose a character</div>
+        <div class="sidebar-subtitle">I / You / He / She / It / We / You pl. / They</div>
+
+        <div class="pronouns-line">
+          Выбери персонажа и тренируй фразы с местоимениями.
+        </div>
+
+        <div class="characters">
+          <!-- I (man) -->
+          <button class="char-btn active" type="button"
+                  data-src="i_clothes_trainer_final_audio.html">
+            <div class="char-icon">👨</div>
+            <div>
+              <div class="char-text-main">I (man)</div>
+              <div class="char-text-sub">
+                Bag, shirt, jacket, coat, shoes, tie
+              </div>
+            </div>
+          </button>
+
+          <!-- I (woman) -->
+          <button class="char-btn" type="button"
+                  data-src="i_woman_clothes_trainer_final_audio.html">
+            <div class="char-icon">👩</div>
+            <div>
+              <div class="char-text-main">I (woman)</div>
+              <div class="char-text-sub">
+                Glasses, bag, hat, jacket, shoes, dress
+              </div>
+            </div>
+          </button>
+
+          <!-- You -->
+          <button class="char-btn" type="button"
+                  data-src="you_clothes_trainer_final_audio.html">
+            <div class="char-icon">🙂</div>
+            <div>
+              <div class="char-text-main">You</div>
+              <div class="char-text-sub">
+                Bag, watch, t-shirt, jacket, shoes, skirt
+              </div>
+            </div>
+          </button>
+
+          <!-- He -->
+          <button class="char-btn" type="button"
+                  data-src="clothes_trainer_7_items_audio_MAN_RENAMED.html">
+            <div class="char-icon">🧑‍🦱</div>
+            <div>
+              <div class="char-text-main">He</div>
+              <div class="char-text-sub">
+                Hat, glasses, jacket, t-shirt, trousers, watch, shoes
+              </div>
+            </div>
+          </button>
+
+          <!-- She -->
+          <button class="char-btn" type="button"
+                  data-src="woman_trainer_final_audio_WOMAN_RENAMED.html">
+            <div class="char-icon">👩‍🦰</div>
+            <div>
+              <div class="char-text-main">She</div>
+              <div class="char-text-sub">
+                Bag, watch, hat, shoes, dress, glasses
+              </div>
+            </div>
+          </button>
+
+          <!-- It -->
+          <button class="char-btn" type="button"
+                  data-src="it_clothes_trainer_final_audio_FIXED.html">
+            <div class="char-icon">🧸</div>
+            <div>
+              <div class="char-text-main">It</div>
+              <div class="char-text-sub">
+                Hat, sweater, gloves, watch, socks, trainers
+              </div>
+            </div>
+          </button>
+
+          <!-- We -->
+          <button class="char-btn" type="button"
+                  data-src="our_clothes_trainer_final_audio.html">
+            <div class="char-icon">🧍‍♀️🧍‍♂️</div>
+            <div>
+              <div class="char-text-main">We</div>
+              <div class="char-text-sub">
+                Glasses, bags, trousers, socks, t-shirts, trainers
+              </div>
+            </div>
+          </button>
+
+          <!-- You pl. -->
+          <button class="char-btn" type="button"
+                  data-src="youpl_clothes_trainer_final_audio.html">
+            <div class="char-icon">🧑‍🤝‍🧑</div>
+            <div>
+              <div class="char-text-main">You pl.</div>
+              <div class="char-text-sub">
+                Glasses, trousers, shirts, socks, coats, ties
+              </div>
+            </div>
+          </button>
+
+          <!-- They -->
+          <button class="char-btn" type="button"
+                  data-src="they_clothes_trainer_final_audio_UPDATED.html">
+            <div class="char-icon">👨‍👩‍👦</div>
+            <div>
+              <div class="char-text-main">They</div>
+              <div class="char-text-sub">
+                Bags, hats, jeans, shoes, coats, gloves
+              </div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Инструкция ПОД меню -->
+        <div class="menu-instructions">
+          <div class="menu-instructions-title">Как пользоваться тренажёром</div>
+          <ol>
+            <li>Выберите персонажа слева.</li>
+            <li>Наведите курсор на предмет одежды на картинке.</li>
+            <li>Произнесите фразу на английском. Например, <b>My hat is grey.</b></li>
+            <li>Нажмите на выделенную область и прослушайте верную фразу.</li>
+            <li>Повторите за диктором и посмотрите, как пишется фраза внизу.</li>
+            <li>Повторяйте шаги столько раз, сколько нужно.</li>
+          </ol>
+        </div>
+      </aside>
+
+      <!-- ПРАВАЯ КОЛОНКА -->
+      <section class="preview">
+        <div class="preview-label">Trainer preview</div>
+        <div class="iframe-frame">
+          <div class="iframe-inner-header"></div>
+          <div class="iframe-shell">
+            <!-- начальный тренажёр: I (man) -->
+            <iframe id="trainerFrame"
+                    src="i_clothes_trainer_final_audio.html"
+                    scrolling="no"></iframe>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const buttons = Array.from(document.querySelectorAll('.char-btn'));
+    const frame   = document.getElementById('trainerFrame');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const src = btn.dataset.src;
+        if (src) {
+          frame.src = src;
+        }
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
