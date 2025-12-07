@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Clothes Speaking Trainer — He</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #eef3ff;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 20px;
+    }
+
+    .app {
+      background: #ffffff;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .title {
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    /* изображение — БЕЗ рамок, на всю ширину */
+    .image-wrapper {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .image-wrapper img.base-image {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* хотспоты */
+    .hotspot {
+      position: absolute;
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background: rgba(255,255,255,0);
+      cursor: pointer;
+      transition: .15s;
+    }
+
+    .hotspot:hover {
+      border-color: rgba(59,130,246,0.55);
+      box-shadow: 0 0 0 3px rgba(191,219,254,.9), 0 0 18px rgba(37,99,235,.5);
+    }
+
+    .panel {
+      margin-top: 10px;
+      padding: 12px;
+      background: #f9fafb;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .panel-label {
+      font-size: 0.75rem;
+      color: #6b7280;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    #sentence {
+      font-size: 1rem;
+      font-weight: 500;
+      min-height: 1.2em;
+    }
+
+    .hint {
+      text-align: center;
+      font-size: 0.8rem;
+      margin-top: 6px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <div class="title">Используйте местоимение he.</div>
+
+    <div class="image-wrapper">
+      <img class="base-image" src="man.png" alt="Man">
+
+      <!-- Hat -->
+      <button class="hotspot"
+        style="top: 8%; left: 37%; width: 26%; height: 12%;"
+        data-sentence="His hat is black."
+        data-audio="hat_man.mp3"></button>
+
+      <!-- Glasses -->
+      <button class="hotspot"
+        style="top: 17%; left: 39%; width: 22%; height: 7%;"
+        data-sentence="His glasses are black."
+        data-audio="glasses_man.mp3"></button>
+
+      <!-- Jacket -->
+      <button class="hotspot"
+        style="top: 25%; left: 32%; width: 36%; height: 25%;"
+        data-sentence="His jacket is blue."
+        data-audio="jacket_man.mp3"></button>
+
+      <!-- T-shirt -->
+      <button class="hotspot"
+        style="top: 33%; left: 40%; width: 22%; height: 15%;"
+        data-sentence="His t-shirt is white."
+        data-audio="tshirt_man.mp3"></button>
+
+      <!-- Trousers -->
+      <button class="hotspot"
+        style="top: 50%; left: 38%; width: 26%; height: 28%;"
+        data-sentence="His trousers are grey."
+        data-audio="trousers_man.mp3"></button>
+
+      <!-- Watch -->
+      <button class="hotspot"
+        style="top: 40%; left: 56%; width: 10%; height: 9%;"
+        data-sentence="His watch is brown."
+        data-audio="watch_man.mp3"></button>
+
+      <!-- Shoes -->
+      <button class="hotspot"
+        style="top: 73%; left: 33%; width: 34%; height: 16%;"
+        data-sentence="His shoes are brown."
+        data-audio="shoes_man.mp3"></button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label">Sentence</div>
+      <div id="sentence"></div>
+    </div>
+
+    <div class="hint">Области, по которым можно нажать</div>
+
+  </div>
+
+  <audio id="player"></audio>
+
+  <script>
+    const hotspots = document.querySelectorAll(".hotspot");
+    const textEl = document.getElementById("sentence");
+    const player = document.getElementById("player");
+
+    hotspots.forEach(h => {
+      h.addEventListener("click", () => {
+        textEl.textContent = h.dataset.sentence;
+
+        if (h.dataset.audio) {
+          player.src = h.dataset.audio;
+          player.currentTime = 0;
+          player.play().catch(()=>{});
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
