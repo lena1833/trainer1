@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Clothes Trainer – You pl.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #eef3ff;
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh;
+    }
+    .app {
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      max-width: 420px; width: 100%;
+    }
+    .title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: #6b7280;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .image-wrapper {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .image-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .hotspot {
+      position: absolute;
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background: rgba(255,255,255,0);
+      cursor: pointer;
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
+    }
+    .hotspot:hover {
+      border-color: rgba(59,130,246,0.7);
+      background: rgba(255,255,255,0.06);
+      box-shadow: 0 0 0 4px rgba(59,130,246,0.2);
+    }
+    .hotspot.active {
+      border-color: #2563eb;
+      background: rgba(255,255,255,0.12);
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.35);
+    }
+
+    .panel {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+    }
+    .panel-label {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+    .panel-main {
+      font-size: 1rem;
+      font-weight: 600;
+      min-height: 1.3em;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="title">Clothes Speaking Trainer — You pl.</div>
+    <div class="subtitle">Tap an item, listen and repeat the sentence.</div>
+
+    <div class="image-wrapper">
+      <!-- you_pl.png должен лежать рядом с этим файлом -->
+      <img src="you_pl.png" alt="You plural in coats" />
+
+      <!-- glasses -->
+      <button class="hotspot"
+        style="top: 13.4297%; left: 23.4536%; width: 51.2887%; height: 6.40188%;"
+        data-sentence="Your glasses are green."
+        data-sound="glasses"></button>
+
+      <!-- trousers -->
+      <button class="hotspot"
+        style="top: 65.0106%; left: 16.8452%; width: 70.687%; height: 15.2246%;"
+        data-sentence="Your trousers are black."
+        data-sound="trousers"></button>
+
+      <!-- shirts (обновлённая зона) -->
+      <button class="hotspot"
+        style="top: 22.1258%; left: 23.9328%; width: 53.9264%; height: 10.1045%;"
+        data-sentence="Your shirts are blue."
+        data-sound="shirts"></button>
+
+      <!-- socks -->
+      <button class="hotspot"
+        style="top: 81.533%; left: 17.6869%; width: 69.636%; height: 9.91348%;"
+        data-sentence="Your socks are brown."
+        data-sound="socks"></button>
+
+      <!-- coats (обновлённая зона) -->
+      <button class="hotspot"
+        style="top: 46.1962%; left: 7.37758%; width: 83.8515%; height: 16.5317%;"
+        data-sentence="Your coats are white."
+        data-sound="coats"></button>
+
+      <!-- ties (обновлённая зона) -->
+      <button class="hotspot"
+        style="top: 34.0804%; left: 28.2982%; width: 41.8533%; height: 10.8432%;"
+        data-sentence="Your ties are grey."
+        data-sound="ties"></button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label">Sentence</div>
+      <div id="sentence" class="panel-main"></div>
+    </div>
+
+    <!-- Audio -->
+    <audio id="audio-glasses"  src="glasses_youpl.mp3"  preload="auto"></audio>
+    <audio id="audio-trousers" src="trousers_youpl.mp3" preload="auto"></audio>
+    <audio id="audio-shirts"   src="shirts_youpl.mp3"   preload="auto"></audio>
+    <audio id="audio-socks"    src="socks_youpl.mp3"    preload="auto"></audio>
+    <audio id="audio-coats"    src="coats_youpl.mp3"    preload="auto"></audio>
+    <audio id="audio-ties"     src="ties_youpl.mp3"     preload="auto"></audio>
+  </div>
+
+  <script>
+    const hotspots = document.querySelectorAll('.hotspot');
+    const sentenceEl = document.getElementById('sentence');
+
+    const audioMap = {
+      glasses:  document.getElementById('audio-glasses'),
+      trousers: document.getElementById('audio-trousers'),
+      shirts:   document.getElementById('audio-shirts'),
+      socks:    document.getElementById('audio-socks'),
+      coats:    document.getElementById('audio-coats'),
+      ties:     document.getElementById('audio-ties'),
+    };
+
+    function stopAll() {
+      Object.values(audioMap).forEach(a => {
+        a.pause();
+        a.currentTime = 0;
+      });
+    }
+
+    hotspots.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sentence = btn.dataset.sentence || '';
+        const soundKey = btn.dataset.sound;
+
+        sentenceEl.textContent = sentence;
+        hotspots.forEach(h => h.classList.remove('active'));
+        btn.classList.add('active');
+
+        stopAll();
+        const audio = audioMap[soundKey];
+        if (audio) {
+          audio.play().catch(() => {});
+        }
+      });
+    });
+  </script>
+</body>
+</html>
